@@ -1,0 +1,18 @@
+packages:
+  "date-fns": "For formatting and displaying dates nicely in the UI"
+  "recharts": "For rendering statistical charts and progress visualizations on the dashboard"
+  "react-hook-form": "For robust form state management"
+  "@hookform/resolvers": "For integrating Zod validation with React Hook Form"
+  "zod": "For defining strict form validation schemas"
+  "framer-motion": "For fluid page transitions, layout animations, and micro-interactions"
+  "clsx": "For conditional class merging"
+  "tailwind-merge": "For resolving Tailwind class conflicts"
+
+images:
+  - path: "artifacts/study-planner/public/images/academic-header.png"
+    description: "A soft, calming, sophisticated abstract background. Gentle flowing waves of muted indigo, soft sage green, and warm cream. Academic, focused, minimal, and premium. No text."
+    aspect_ratio: "16:9"
+
+notes:
+  - The API client is pre-generated in @workspace/api-client-react. We will wrap these hooks in our own custom hooks to handle query invalidation automatically.
+  - Using React Hook Form with Zod for all forms, coercing numbers and dates as needed.

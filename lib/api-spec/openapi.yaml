@@ -1,0 +1,488 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Study Planner API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: subjects
+    description: Subject/course management
+  - name: sessions
+    description: Study session management
+  - name: goals
+    description: Study goals management
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /subjects:
+    get:
+      operationId: listSubjects
+      tags: [subjects]
+      summary: List all subjects
+      responses:
+        "200":
+          description: List of subjects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subject"
+    post:
+      operationId: createSubject
+      tags: [subjects]
+      summary: Create a new subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectInput"
+      responses:
+        "201":
+          description: Created subject
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+
+  /subjects/{id}:
+    put:
+      operationId: updateSubject
+      tags: [subjects]
+      summary: Update a subject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectInput"
+      responses:
+        "200":
+          description: Updated subject
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+    delete:
+      operationId: deleteSubject
+      tags: [subjects]
+      summary: Delete a subject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [sessions]
+      summary: List all study sessions
+      parameters:
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: completed
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudySession"
+    post:
+      operationId: createSession
+      tags: [sessions]
+      summary: Create a new study session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSessionInput"
+      responses:
+        "201":
+          description: Created session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+
+  /sessions/{id}:
+    put:
+      operationId: updateSession
+      tags: [sessions]
+      summary: Update a study session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSessionInput"
+      responses:
+        "200":
+          description: Updated session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+    delete:
+      operationId: deleteSession
+      tags: [sessions]
+      summary: Delete a study session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /goals:
+    get:
+      operationId: listGoals
+      tags: [goals]
+      summary: List all goals
+      responses:
+        "200":
+          description: List of goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyGoal"
+    post:
+      operationId: createGoal
+      tags: [goals]
+      summary: Create a new study goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGoalInput"
+      responses:
+        "201":
+          description: Created goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyGoal"
+
+  /goals/{id}:
+    put:
+      operationId: updateGoal
+      tags: [goals]
+      summary: Update a goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGoalInput"
+      responses:
+        "200":
+          description: Updated goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyGoal"
+    delete:
+      operationId: deleteGoal
+      tags: [goals]
+      summary: Delete a goal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [sessions]
+      summary: Get study statistics
+      responses:
+        "200":
+          description: Statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyStats"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+        description:
+          type: string
+          nullable: true
+        weeklyGoalHours:
+          type: number
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - color
+        - createdAt
+
+    CreateSubjectInput:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+        description:
+          type: string
+          nullable: true
+        weeklyGoalHours:
+          type: number
+          nullable: true
+      required:
+        - name
+        - color
+
+    StudySession:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        subjectName:
+          type: string
+        subjectColor:
+          type: string
+        title:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+        completed:
+          type: boolean
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - subjectId
+        - subjectName
+        - subjectColor
+        - title
+        - scheduledAt
+        - durationMinutes
+        - completed
+        - createdAt
+
+    CreateSessionInput:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        title:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+      required:
+        - subjectId
+        - title
+        - scheduledAt
+        - durationMinutes
+
+    UpdateSessionInput:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        title:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+        completed:
+          type: boolean
+      required:
+        - subjectId
+        - title
+        - scheduledAt
+        - durationMinutes
+        - completed
+
+    StudyGoal:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+          nullable: true
+        subjectName:
+          type: string
+          nullable: true
+        title:
+          type: string
+        targetHours:
+          type: number
+        completedHours:
+          type: number
+        deadline:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - targetHours
+        - completedHours
+        - createdAt
+
+    CreateGoalInput:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+          nullable: true
+        title:
+          type: string
+        targetHours:
+          type: number
+        deadline:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - title
+        - targetHours
+
+    StudyStats:
+      type: object
+      properties:
+        totalHoursThisWeek:
+          type: number
+        totalHoursAllTime:
+          type: number
+        completedSessionsThisWeek:
+          type: integer
+        upcomingSessionsCount:
+          type: integer
+        subjectBreakdown:
+          type: array
+          items:
+            type: object
+            properties:
+              subjectId:
+                type: integer
+              subjectName:
+                type: string
+              subjectColor:
+                type: string
+              totalHours:
+                type: number
+            required:
+              - subjectId
+              - subjectName
+              - subjectColor
+              - totalHours
+        streakDays:
+          type: integer
+      required:
+        - totalHoursThisWeek
+        - totalHoursAllTime
+        - completedSessionsThisWeek
+        - upcomingSessionsCount
+        - subjectBreakdown
+        - streakDays
